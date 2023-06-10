@@ -50,6 +50,7 @@ public class ApplicationClientRepository implements RegisteredClientRepository {
     @Override
     public RegisteredClient findByClientId(String clientId) {
         ApplicationClient applicationClient = applicationClientDao.findByClientId(clientId);
+
         return converToRegisteredClient(applicationClient);
     }
 

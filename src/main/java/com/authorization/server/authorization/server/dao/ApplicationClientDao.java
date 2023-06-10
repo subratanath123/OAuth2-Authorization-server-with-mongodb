@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ApplicationClientDao extends MongoRepository<ApplicationClient, String> {
 
-    @Query(value = "{clientId: {eq: ?0}}")
+    @Query(value = "{clientId: {$eq: ?0}}")
     ApplicationClient findByClientId(String clientId);
 
 }

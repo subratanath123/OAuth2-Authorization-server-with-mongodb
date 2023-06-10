@@ -8,6 +8,8 @@
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
+<html xmlns:th="http://www.thymeleaf.org">
+
 <div class="container">
 
     <div class="row justify-content-center">
@@ -15,47 +17,15 @@
             <div class="card">
                 <div class="logo mb-3">
                     <div class="col-md-12 text-center">
-                        <h1>Application Client Registration</h1>
+                        <h1>Done Page</h1>
                     </div>
                 </div>
 
                 <article class="card-body">
-                    <form method="post" action="/public/client/registration">
-
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <label>Client Name </label>
-                                <input type="text" name="clientName" class="form-control" placeholder="" required>
-                            </div> <!-- form-group end.// -->
-                        </div> <!-- form-row end.// -->
-
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <label>Client ID </label>
-                                <input type="text" name="clientId" class="form-control" placeholder="" required>
-                            </div> <!-- form-group end.// -->
-                        </div> <!-- form-row end.// -->
-
-                        <div class="form-group">
-                            <label>Client Secret</label>
-                            <input type="text" name="clientSecret" class="form-control" placeholder="" required>
-                            <small class="form-text text-muted">This is you client Secret. Keep it safe</small>
-                        </div> <!-- form-group end.// -->
-
-                        <div class="form-group">
-                            <label>Redirect Url</label>
-                            <input type="text" name="redirectUris" class="form-control" placeholder="" required>
-                            <small class="form-text text-muted">This is where your client server will get the token code after successful authentication</small>
-                        </div> <!-- form-group end.// -->
-
-
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary btn-block" value="Register"/>
-                        </div> <!-- form-group// -->
-                        <small class="text-muted">By clicking the 'Register' button, you confirm that you accept our Terms of use and Privacy Policy.</small>
-                    </form>
-
+                    <div class="alert alert-success" role="alert" th:utext ="${doneBean.message}">
+                    </div>
                 </article> <!-- card-body end .// -->
+
             </div> <!-- card.// -->
         </div> <!-- col.//-->
 

@@ -4,6 +4,9 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+<link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet">
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
 <div class="container">
 
@@ -18,6 +21,14 @@
 
                 <article class="card-body">
                     <form method="post" action="/public/client/registration">
+
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <label>Client Name </label>
+                                <input type="text" name="clientName" class="form-control" placeholder="" required>
+                            </div> <!-- form-group end.// -->
+                        </div> <!-- form-row end.// -->
+
                         <div class="form-row">
                             <div class="col form-group">
                                 <label>Client ID </label>
@@ -41,7 +52,7 @@
                         <div class="form-group">
                             <input type="submit" class="btn btn-primary btn-block" value="Register"/>
                         </div> <!-- form-group// -->
-                        <small class="text-muted">By clicking the 'Register' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>
+                        <small class="text-muted">By clicking the 'Register' button, you confirm that you accept our Terms of use and Privacy Policy.</small>
                     </form>
 
                 </article> <!-- card-body end .// -->

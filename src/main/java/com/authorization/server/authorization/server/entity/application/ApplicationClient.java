@@ -1,30 +1,58 @@
 package com.authorization.server.authorization.server.entity.application;
 
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.lang.String.join;
 
 public class ApplicationClient implements Serializable {
 
     @Id
     private String id;
+
+    @NotNull
     private String clientId;
+
+    @FutureOrPresent
     private Instant clientIdIssuedAt;
+
+
+    @NotNull
+    @Size(min = 8, max = 200)
     private String clientSecret;
-    private Instant clientSecretExpiresAt  ;
+
+
+    @FutureOrPresent
+    private Instant clientSecretExpiresAt;
+
+    @NotNull
+    @Size(min = 2, max = 200)
     private String clientName;
+
     private Set<ClientAuthenticationMethod> clientAuthenticationMethods;
     private Set<AuthorizationGrantType> authorizationGrantTypes;
+
+    @NotEmpty
+    @Size(min = 1)
     private Set<String> redirectUris;
+
     private Set<String> postLogoutRedirectUris;
+
+    //    @NotEmpty
+//    @Size(min = 1)
     private Set<String> scopes;
+
+    @NotNull
     private boolean requireAuthorizationConsent;
 
     public String getId() {
@@ -121,5 +149,12 @@ public class ApplicationClient implements Serializable {
 
     public void setRequireAuthorizationConsent(boolean requireAuthorizationConsent) {
         this.requireAuthorizationConsent = requireAuthorizationConsent;
+    }
+
+    @Override
+    public String toString() {
+        return " Authentication Url: \n " +
+                " http://auth-server:8000/oauth2/authorize?response_type=" + authorizationGrantTypes.stream().map(AuthorizationGrantType::getValue).collect(Collectors.joining(" ")) +
+                " &client_id=" + clientId + "&redirect_uri=" + join(" ", redirectUris) + "&scope=" + join(" ", scopes);
     }
 }
