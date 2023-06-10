@@ -55,6 +55,9 @@ public class ApplicationClient implements Serializable {
     @NotNull
     private boolean requireAuthorizationConsent;
 
+    public ApplicationClient() {
+    }
+
     public String getId() {
         return id;
     }

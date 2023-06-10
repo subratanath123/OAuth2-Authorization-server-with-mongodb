@@ -56,13 +56,16 @@ public class ApplicationClientController {
         }
 
         applicationClient
+                .setRequireAuthorizationConsent(true);
+
+        applicationClient
                 .setClientAuthenticationMethods(new HashSet<>(List.of(CLIENT_SECRET_BASIC)));
 
         applicationClient
                 .setAuthorizationGrantTypes(new HashSet<>(asList(AUTHORIZATION_CODE, REFRESH_TOKEN)));
 
         applicationClient
-                .setScopes(new HashSet<>(asList(OPENID, "read")));
+                .setScopes(new HashSet<>(asList("Profile Read", "Profile Update")));
 
         RegisteredClient registeredClient = applicationClientRepository.converToRegisteredClient(applicationClient);
 
