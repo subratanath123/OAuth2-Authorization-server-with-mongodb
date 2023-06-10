@@ -1,6 +1,6 @@
 package com.authorization.server.authorization.server.config;
 
-import com.authorization.server.authorization.server.service.UserService;
+import com.authorization.server.authorization.server.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

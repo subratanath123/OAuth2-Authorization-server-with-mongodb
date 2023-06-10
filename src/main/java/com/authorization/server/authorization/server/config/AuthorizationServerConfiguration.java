@@ -1,9 +1,12 @@
 package com.authorization.server.authorization.server.config;
 
+import com.authorization.server.authorization.server.dao.ApplicationClientRepository;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -16,7 +19,6 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -35,27 +37,17 @@ import java.util.UUID;
 @Configuration
 public class AuthorizationServerConfiguration {
 
+    @Autowired
+    private ApplicationClientRepository applicationClientRepository;
+
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
 
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("client1")
-                .clientSecret("{noop}myClientSecretValue")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://localhost:8080/login/oauth2/code/users-client-oidc")
-                .redirectUri("http://localhost:8080/authorized")
-                .scope(OidcScopes.OPENID)
-                .scope("read")
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .build();
-
-        return new InMemoryRegisteredClientRepository(registeredClient);
+        return applicationClientRepository;
     }
 
     /*
-    http://auth-server:8000/oauth2/authorize?response_type=code&client_id=client1&redirect_uri=http://localhost:8080/authorized&scope=openid read
+     * http://auth-server:8000/oauth2/authorize?response_type=code&client_id=client1&redirect_uri=http://localhost:8080/authorized&scope=openid read
      */
 
     @Bean

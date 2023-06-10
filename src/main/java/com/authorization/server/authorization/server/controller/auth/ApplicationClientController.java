@@ -1,60 +1,69 @@
 package com.authorization.server.authorization.server.controller.auth;
 
+import com.authorization.server.authorization.server.dao.ApplicationClientRepository;
 import com.authorization.server.authorization.server.dao.UserDao;
-import com.authorization.server.authorization.server.entity.Role;
-import com.authorization.server.authorization.server.entity.User;
-import com.authorization.server.authorization.server.service.UserService;
+import com.authorization.server.authorization.server.entity.application.ApplicationClient;
+import com.authorization.server.authorization.server.entity.user.Role;
+import com.authorization.server.authorization.server.entity.user.User;
+import com.authorization.server.authorization.server.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
 
 import static java.util.Arrays.asList;
+import static org.springframework.security.oauth2.core.AuthorizationGrantType.*;
+import static org.springframework.security.oauth2.core.ClientAuthenticationMethod.*;
+import static org.springframework.security.oauth2.core.oidc.OidcScopes.OPENID;
 
+@Controller
+@RequestMapping("/public/client/registration")
 public class ApplicationClientController {
 
     @Autowired
-    private UserDao userDao;
-
-    @Autowired
-    private UserService userService;
+    private ApplicationClientRepository applicationClientRepository;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.setDisallowedFields("role*");
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
-    @GetMapping("/registration")
+    @GetMapping
     public String showRegistration(ModelMap modelMap) {
-        modelMap.put("user", new User());
+        modelMap.put("applicationClient", new ApplicationClient());
 
-        return "signup";
+        return "application-client";
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> registrationSubmit(@ModelAttribute User user,
+    @PostMapping
+    public ResponseEntity<?> registrationSubmit(@ModelAttribute ApplicationClient applicationClient,
                                                 BindingResult bindingResult) {
 
-        user.setRoleList(asList(Role.VIEW));
+        applicationClient
+                .setClientAuthenticationMethods(new HashSet<>(asList(CLIENT_SECRET_BASIC)));
 
-        if (userDao.isEmailExists(user.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
-        }
+        applicationClient
+                .setAuthorizationGrantTypes(new HashSet<>(asList(AUTHORIZATION_CODE, REFRESH_TOKEN)));
 
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
+        applicationClient
+                .setScopes(new HashSet<>(asList(OPENID, "read")));
 
-        userService.save(user);
+        RegisteredClient registeredClient = applicationClientRepository.converToRegisteredClient(applicationClient);
 
-        return ResponseEntity.accepted().body(user);
+        applicationClientRepository.save(registeredClient);
+
+        return ResponseEntity.accepted().body(registeredClient);
     }
 
 }

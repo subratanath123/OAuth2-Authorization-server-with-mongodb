@@ -2,9 +2,9 @@ package com.authorization.server.authorization.server.controller.auth;
 
 
 import com.authorization.server.authorization.server.dao.UserDao;
-import com.authorization.server.authorization.server.entity.Role;
-import com.authorization.server.authorization.server.entity.User;
-import com.authorization.server.authorization.server.service.UserService;
+import com.authorization.server.authorization.server.entity.user.Role;
+import com.authorization.server.authorization.server.entity.user.User;
+import com.authorization.server.authorization.server.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.ResponseEntity;

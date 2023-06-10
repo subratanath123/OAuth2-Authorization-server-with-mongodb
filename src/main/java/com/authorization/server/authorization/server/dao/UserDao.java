@@ -1,8 +1,6 @@
 package com.authorization.server.authorization.server.dao;
 
-import com.authorization.server.authorization.server.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import com.authorization.server.authorization.server.entity.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

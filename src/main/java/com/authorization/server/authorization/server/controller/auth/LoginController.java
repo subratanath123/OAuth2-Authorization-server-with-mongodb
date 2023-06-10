@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/befriendme-login")
+@RequestMapping("/auth-login")
 public class LoginController {
 
     @InitBinder

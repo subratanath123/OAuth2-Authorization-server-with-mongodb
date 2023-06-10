@@ -1,0 +1,126 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="logo mb-3">
+                    <div class="col-md-12 text-center">
+                        <h1>Application Client Registration</h1>
+                    </div>
+                </div>
+
+                <article class="card-body">
+                    <form method="post" action="/public/client/registration">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <label>Client ID </label>
+                                <input type="text" name="clientId" class="form-control" placeholder="" required>
+                            </div> <!-- form-group end.// -->
+                        </div> <!-- form-row end.// -->
+
+                        <div class="form-group">
+                            <label>Client Secret</label>
+                            <input type="text" name="clientSecret" class="form-control" placeholder="" required>
+                            <small class="form-text text-muted">This is you client Secret. Keep it safe</small>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-group">
+                            <label>Redirect Url</label>
+                            <input type="text" name="redirectUris" class="form-control" placeholder="" required>
+                            <small class="form-text text-muted">This is where your client server will get the token code after successful authentication</small>
+                        </div> <!-- form-group end.// -->
+
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary btn-block" value="Register"/>
+                        </div> <!-- form-group// -->
+                        <small class="text-muted">By clicking the 'Register' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>
+                    </form>
+
+                </article> <!-- card-body end .// -->
+            </div> <!-- card.// -->
+        </div> <!-- col.//-->
+
+    </div> <!-- row.//-->
+
+
+</div>
+<!--container end.//-->
+<style>
+            body{
+        padding-top:4.2rem;
+		padding-bottom:4.2rem;
+		background:rgba(0, 0, 0, 0.76);
+        }
+        a{
+         text-decoration:none !important;
+         }
+         h1,h2,h3{
+         font-family: 'Kaushan Script', cursive;
+         }
+          .myform{
+		position: relative;
+		display: -ms-flexbox;
+		display: flex;
+		padding: 1rem;
+		-ms-flex-direction: column;
+		flex-direction: column;
+		width: 100%;
+		pointer-events: auto;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid rgba(0,0,0,.2);
+		border-radius: 1.1rem;
+		outline: 0;
+		max-width: 500px;
+		 }
+         .tx-tfm{
+         text-transform:uppercase;
+         }
+         .mybtn{
+         border-radius:50px;
+         }
+
+         .login-or {
+         position: relative;
+         color: #aaa;
+         margin-top: 10px;
+         margin-bottom: 10px;
+         padding-top: 10px;
+         padding-bottom: 10px;
+         }
+         .span-or {
+         display: block;
+         position: absolute;
+         left: 50%;
+         top: -2px;
+         margin-left: -25px;
+         background-color: #fff;
+         width: 50px;
+         text-align: center;
+         }
+         .hr-or {
+         height: 1px;
+         margin-top: 0px !important;
+         margin-bottom: 0px !important;
+         }
+         .google {
+         color:#666;
+         width:100%;
+         height:40px;
+         text-align:center;
+         outline:none;
+         border: 1px solid lightgrey;
+         }
+          form .error {
+         color: #ff0000;
+         }
+         #second{display:none;}
+</style>
