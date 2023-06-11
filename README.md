@@ -1,4 +1,4 @@
-# OAuth2 Authentication Server Implementation using Spring Boot new Authorization Server using MongoDb as Database
+# OAuth2 Authentication Server Implementation using Spring Boot new Authorization Server & MongoDb as Database
 
 This project demonstrates the implementation of an OAuth2 authentication server using Spring Boot. The authentication server allows clients to authenticate and obtain access tokens for accessing protected resources.
 
