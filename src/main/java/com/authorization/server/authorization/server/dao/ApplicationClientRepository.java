@@ -3,6 +3,8 @@ package com.authorization.server.authorization.server.dao;
 import com.authorization.server.authorization.server.entity.application.ApplicationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
@@ -25,10 +27,12 @@ public class ApplicationClientRepository implements RegisteredClientRepository {
     public void save(RegisteredClient registeredClient) {
         ApplicationClient applicationClient = new ApplicationClient();
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         applicationClient.setId(registeredClient.getId());
         applicationClient.setClientId(registeredClient.getClientId());
         applicationClient.setClientIdIssuedAt(registeredClient.getClientIdIssuedAt());
-        applicationClient.setClientSecret(registeredClient.getClientSecret());
+        applicationClient.setClientSecret(passwordEncoder.encode(registeredClient.getClientSecret()));
         applicationClient.setClientSecretExpiresAt(registeredClient.getClientSecretExpiresAt());
         applicationClient.setClientName(registeredClient.getClientName());
         applicationClient.setClientAuthenticationMethods(registeredClient.getClientAuthenticationMethods());
@@ -55,7 +59,6 @@ public class ApplicationClientRepository implements RegisteredClientRepository {
     }
 
     public RegisteredClient converToRegisteredClient(ApplicationClient applicationClient) {
-        applicationClient.setId(UUID.randomUUID().toString());
 
         RegisteredClient.Builder clientBuilder = RegisteredClient.withId(applicationClient.getId())
                 .clientId(applicationClient.getClientId())

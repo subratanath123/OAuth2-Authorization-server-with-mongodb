@@ -6,25 +6,20 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.security.KeyPair;
@@ -34,8 +29,14 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+/*
+ * https://github.com/spring-projects/spring-authorization-server/blob/main/samples/demo-authorizationserver/src/main/java/sample/config/AuthorizationServerConfig.java
+ */
+
 @Configuration
 public class AuthorizationServerConfiguration {
+
+//    private static final String CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent";
 
     @Autowired
     private ApplicationClientRepository applicationClientRepository;
@@ -47,16 +48,28 @@ public class AuthorizationServerConfiguration {
     }
 
     /*
-     * http://auth-server:8000/oauth2/authorize?response_type=code&client_id=client2&redirect_uri=http://localhost:8080/authorized&scope=openid read
+     * http://auth-server:8000/oauth2/authorize?response_type=code&client_id=client2&redirect_uri=http://localhost:8080/&scope=read%20openid
      */
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http
+                .sessionManagement(configurer ->
+                        configurer
+                                .sessionConcurrency(
+                                        sessionConcurrency ->
+                                                sessionConcurrency
+                                                        .maximumSessions(1)
+                                                        .expiredUrl("/login?expired")
+                                )
+                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        );
 
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
+        http
+                .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                .oidc(Customizer.withDefaults());
 
         return http.formLogin(
                 loginConfigure ->
@@ -70,14 +83,6 @@ public class AuthorizationServerConfiguration {
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
                 .issuer("http://auth-server:8000")
-                .build();
-    }
-
-    @Bean
-    public ClientSettings clientSettings() {
-        return ClientSettings.builder()
-                .requireAuthorizationConsent(true)
-                .requireProofKey(false)
                 .build();
     }
 

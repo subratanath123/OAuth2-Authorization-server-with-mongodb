@@ -157,7 +157,7 @@ public class ApplicationClient implements Serializable {
     @Override
     public String toString() {
         return " Authentication Url: \n " +
-                " http://auth-server:8000/oauth2/authorize?response_type=" + authorizationGrantTypes.stream().map(AuthorizationGrantType::getValue).collect(Collectors.joining(" ")) +
-                " &client_id=" + clientId + "&redirect_uri=" + join(" ", redirectUris) + "&scope=" + join(" ", scopes);
+                " http://auth-server:8000/oauth2/authorize?response_type=code" +
+                "&client_id=" + clientId + "&redirect_uri=" + join(",", redirectUris) + "&scope=" + join("%20", scopes);
     }
 }

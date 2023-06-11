@@ -17,12 +17,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.REFRESH_TOKEN;
 import static org.springframework.security.oauth2.core.ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
-import static org.springframework.security.oauth2.core.oidc.OidcScopes.OPENID;
 
 @Controller
 @RequestMapping("/public/client/registration")
@@ -55,6 +55,8 @@ public class ApplicationClientController {
             return "application-client";
         }
 
+        applicationClient.setId(UUID.randomUUID().toString());
+
         applicationClient
                 .setRequireAuthorizationConsent(true);
 
@@ -65,7 +67,7 @@ public class ApplicationClientController {
                 .setAuthorizationGrantTypes(new HashSet<>(asList(AUTHORIZATION_CODE, REFRESH_TOKEN)));
 
         applicationClient
-                .setScopes(new HashSet<>(asList("Profile Read", "Profile Update")));
+                .setScopes(new HashSet<>(asList("openid", "Profile-Read", "Profile-Update")));
 
         RegisteredClient registeredClient = applicationClientRepository.converToRegisteredClient(applicationClient);
 
