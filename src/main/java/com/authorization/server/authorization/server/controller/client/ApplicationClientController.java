@@ -67,7 +67,7 @@ public class ApplicationClientController {
                 .setAuthorizationGrantTypes(new HashSet<>(asList(AUTHORIZATION_CODE, REFRESH_TOKEN)));
 
         applicationClient
-                .setScopes(new HashSet<>(asList("openid", "Profile-Read", "Profile-Update")));
+                .setScopes(new HashSet<>(asList("openid", "Profile-Read", "Profile-Write")));
 
         RegisteredClient registeredClient = applicationClientRepository.converToRegisteredClient(applicationClient);
 

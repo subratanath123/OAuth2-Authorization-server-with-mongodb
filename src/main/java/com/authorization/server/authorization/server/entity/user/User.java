@@ -1,5 +1,6 @@
 package com.authorization.server.authorization.server.entity.user;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,19 +18,28 @@ public class User implements Serializable, UserDetails {
     @Id
     private String id;
 
+    @NotNull
     private String email;
 
+    @NotNull
     private String password;
 
     private String phone;
 
+    @NotNull
     private String firstName;
 
+    @NotNull
     private String lastName;
+
+    @NotNull
+    private String gender;
 
     private List<Address> addressList;
 
     private List<Role> roleList;
+
+    private boolean verifiedUser;
 
     public String getId() {
         return id;
@@ -51,8 +61,7 @@ public class User implements Serializable, UserDetails {
     public Set<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        roleList.stream()
-                .peek(role -> authorities.add(new SimpleGrantedAuthority(role.name())));
+        roleList.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.name())));
 
         return authorities;
     }
@@ -115,6 +124,14 @@ public class User implements Serializable, UserDetails {
         this.lastName = lastName;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public List<Address> getAddressList() {
         return addressList;
     }
@@ -129,5 +146,13 @@ public class User implements Serializable, UserDetails {
 
     public void setRoleList(List<Role> roleList) {
         this.roleList = roleList;
+    }
+
+    public boolean isVerifiedUser() {
+        return verifiedUser;
+    }
+
+    public void setVerifiedUser(boolean verifiedUser) {
+        this.verifiedUser = verifiedUser;
     }
 }

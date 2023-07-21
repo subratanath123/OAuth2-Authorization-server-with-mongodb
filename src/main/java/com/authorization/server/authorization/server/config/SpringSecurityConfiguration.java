@@ -30,6 +30,8 @@ public class SpringSecurityConfiguration {
                         authorizeRequests -> authorizeRequests
                                 .requestMatchers("/public/**")
                                 .permitAll()
+                                .requestMatchers("/.well-known/*")
+                                .permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(
