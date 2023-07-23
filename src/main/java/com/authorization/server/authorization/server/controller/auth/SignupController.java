@@ -7,24 +7,28 @@ import com.authorization.server.authorization.server.entity.user.Role;
 import com.authorization.server.authorization.server.entity.user.User;
 import com.authorization.server.authorization.server.service.mail.EmailService;
 import com.authorization.server.authorization.server.service.user.UserService;
+import com.authorization.server.authorization.server.utils.JsonUtils;
 import com.authorization.server.authorization.server.utils.OtpGenerator;
-import jakarta.mail.MessagingException;
-import jakarta.validation.Valid;
+import com.authorization.server.authorization.server.validator.annotation.MailVerification;
+import com.authorization.server.authorization.server.validator.annotation.UserCustomValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import static java.util.Arrays.asList;
+import java.util.List;
 
-//@Api(tags = "Authentication")
-//@RestController
+import static com.authorization.server.authorization.server.enums.Action.EMAIL_VERIFICATION;
+import static com.authorization.server.authorization.server.enums.Action.SIGNUP_ACTION;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 
-@Controller
+@RestController
 @RequestMapping("/public")
+@CrossOrigin(origins = "*")
+@Validated //its must needed for custom annotation validator
 public class SignupController {
 
     @Autowired
@@ -36,52 +40,52 @@ public class SignupController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("role*");
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
-    @GetMapping("/registration")
-    public String showRegistration(ModelMap modelMap) {
-        modelMap.put("user", new User());
-
-        return "signup";
-    }
-
     @PostMapping("/registration")
-    public String registrationSubmit(@Valid @ModelAttribute User user,
-                                     BindingResult bindingResult) throws MessagingException {
+    public ResponseEntity<?> registrationSubmit(@Validated
+                                                @RequestBody
+                                                @UserCustomValidation(action = SIGNUP_ACTION) User user) throws Exception {
+        user.setRoleList(List.of(Role.VIEW));
 
-        user.setRoleList(asList(Role.VIEW));
-
-        if (bindingResult.hasErrors()) {
-            return "signup";
-        }
-
-        User existingUser = userDao.findByEmail(user.getEmail());
-
-        if (existingUser != null && existingUser.isVerifiedUser()) {
-            bindingResult.reject("user.email.exists");
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "signup";
-        }
+        redisTemplate.convertAndSend("signUpLog", JsonUtils.convertObjectToJson(user));
 
         userService.save(user);
         user.setVerifiedUser(false); //Initially not verified at first registration
 
-        emailService.sendMailWithAttachment(
-                new EmailOtpDetails
-                        .Builder()
-                        .msgBody("Your OTP code is" + OtpGenerator.generateOtp(6))
-                        .recipient(user.getEmail())
-                        .subject("Be Friend Me :: OTP")
-                        .build()
-        );
+        String verificationCode = OtpGenerator.generateOtp(6);
+        EmailOtpDetails otpDetails = new EmailOtpDetails
+                .Builder()
+                .msgBody("Your OTP code is " + verificationCode)
+                .recipient(user.getEmail())
+                .verificationCode(verificationCode)
+                .subject("Be Friend Me :: OTP")
+                .build();
 
-        return "done";
+        emailService.sendMailWithAttachment(otpDetails);
+
+        redisTemplate.opsForValue().set("otpDetails:" + otpDetails.getEmail(), JsonUtils.convertObjectToJson(otpDetails));
+
+        return new ResponseEntity<>(user, ACCEPTED);
+    }
+
+    @PostMapping("/mail-verification")
+    public ResponseEntity<?> mailVerification(@Validated
+                                              @MailVerification(action = EMAIL_VERIFICATION)
+                                              @RequestBody EmailOtpDetails otpDetails) {
+
+        User user = userDao.findByEmail(otpDetails.getEmail());
+        user.setVerifiedUser(true);
+        userDao.save(user);
+
+        return new ResponseEntity<>(ACCEPTED);
     }
 
 }

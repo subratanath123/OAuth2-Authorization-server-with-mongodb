@@ -4,21 +4,21 @@ import java.io.Serializable;
 
 public class EmailOtpDetails implements Serializable {
 
-    private String recipient;
+    private String email;
     private String msgBody;
     private String subject;
-    private String attachment;
+    private String verificationCode;
 
     private EmailOtpDetails() {
         // Private constructor to enforce the use of the builder
     }
 
-    public String getRecipient() {
-        return recipient;
+    public String getEmail() {
+        return email;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMsgBody() {
@@ -37,12 +37,12 @@ public class EmailOtpDetails implements Serializable {
         this.subject = subject;
     }
 
-    public String getAttachment() {
-        return attachment;
+    public String getVerificationCode() {
+        return verificationCode;
     }
 
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     public static Builder builder() {
@@ -57,7 +57,7 @@ public class EmailOtpDetails implements Serializable {
         }
 
         public Builder recipient(String recipient) {
-            emailOtpDetails.recipient = recipient;
+            emailOtpDetails.email = recipient;
             return this;
         }
 
@@ -71,8 +71,8 @@ public class EmailOtpDetails implements Serializable {
             return this;
         }
 
-        public Builder attachment(String attachment) {
-            emailOtpDetails.attachment = attachment;
+        public Builder verificationCode(String verificationCode) {
+            emailOtpDetails.verificationCode = verificationCode;
             return this;
         }
 

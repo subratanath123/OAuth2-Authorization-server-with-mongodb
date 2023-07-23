@@ -32,7 +32,7 @@
                         <div class="form-row">
                             <div class="col form-group">
                                 <label>First name </label>
-                                <input type="text" id="name" th:field="*{firstName}" class="form-control"  placeholder=""/>
+                                <input type="text" id="firstName" th:field="*{firstName}" class="form-control"  placeholder=""/>
                                 <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Error</p>
 
                             </div> <!-- form-group end.// -->

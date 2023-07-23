@@ -55,7 +55,7 @@ public class AuthorizationServerConfiguration {
     }
 
     /*
-     * http://auth-server:8000/oauth2/authorize?response_type=code&client_id=client2&redirect_uri=http://localhost:8080/&scope=read%20openid
+     * http://localhost:8000/oauth2/authorize?response_type=code&client_id=be-hate-me-2&redirect_uri=http://localhost:8001/auth&scope=Profile-Write%20Profile-Read%20openid
      */
 
     @Bean
@@ -89,7 +89,7 @@ public class AuthorizationServerConfiguration {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("http://auth-server:8000")
+                .issuer("http://localhost:8000")
                 .build();
     }
 

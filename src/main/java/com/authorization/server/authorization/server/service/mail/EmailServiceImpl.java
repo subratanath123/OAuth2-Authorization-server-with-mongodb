@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
 
             // Setting up necessary details
             mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
+            mailMessage.setTo(details.getEmail());
             mailMessage.setText(details.getMsgBody());
             mailMessage.setSubject(details.getSubject());
 
@@ -57,14 +57,9 @@ public class EmailServiceImpl implements EmailService {
             // Setting multipart as true for attachments to be send
             mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(details.getRecipient());
+            mimeMessageHelper.setTo(details.getEmail());
             mimeMessageHelper.setText(details.getMsgBody());
             mimeMessageHelper.setSubject(details.getSubject());
-
-            if (details.getAttachment() != null) {
-                FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-                mimeMessageHelper.addAttachment(file.getFilename(), file);
-            }
 
             javaMailSender.send(mimeMessage);
 

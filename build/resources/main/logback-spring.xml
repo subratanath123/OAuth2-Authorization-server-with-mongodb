@@ -1,0 +1,22 @@
+<configuration>
+
+    <!-- Define the logger for your package -->
+    <logger name="com.example" level="DEBUG" />
+
+    <!-- Define the appender for logging requests -->
+    <appender name="REQUEST-LOG" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Attach the appender to the logger -->
+    <logger name="org.springframework.web" additivity="false" level="TRACE">
+        <appender-ref ref="REQUEST-LOG" />
+    </logger>
+
+    <root level="ERROR">
+        <appender-ref ref="REQUEST-LOG" />
+    </root>
+
+</configuration>

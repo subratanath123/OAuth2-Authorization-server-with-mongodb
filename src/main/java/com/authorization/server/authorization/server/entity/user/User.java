@@ -1,6 +1,10 @@
 package com.authorization.server.authorization.server.entity.user;
 
+import com.authorization.server.authorization.server.enums.Action;
+import com.authorization.server.authorization.server.validator.annotation.UserCustomValidation;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,21 +22,25 @@ public class User implements Serializable, UserDetails {
     @Id
     private String id;
 
-    @NotNull
+    @NotEmpty
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "{invalid.email}")
     private String email;
 
-    @NotNull
+    @NotEmpty
     private String password;
+
+    @NotEmpty
+    private String confirmPassword;
 
     private String phone;
 
-    @NotNull
+    @NotEmpty
     private String firstName;
 
-    @NotNull
+    @NotEmpty
     private String lastName;
 
-    @NotNull
+    @NotEmpty
     private String gender;
 
     private List<Address> addressList;
@@ -73,6 +81,14 @@ public class User implements Serializable, UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     @Override

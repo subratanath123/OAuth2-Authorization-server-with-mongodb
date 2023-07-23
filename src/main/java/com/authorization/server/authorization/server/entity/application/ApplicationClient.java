@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,7 @@ public class ApplicationClient implements Serializable {
     private boolean requireAuthorizationConsent;
 
     public ApplicationClient() {
+        scopes = new HashSet<>();
     }
 
     public String getId() {
@@ -157,7 +159,7 @@ public class ApplicationClient implements Serializable {
     @Override
     public String toString() {
         return " Authentication Url: \n " +
-                " http://auth-server:8000/oauth2/authorize?response_type=code" +
+                " http://localhost:8000/oauth2/authorize?response_type=code" +
                 "&client_id=" + clientId + "&redirect_uri=" + join(",", redirectUris) + "&scope=" + join("%20", scopes);
     }
 }
